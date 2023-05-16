@@ -20,25 +20,26 @@ import { BrickMaker } from './BrickMaker';
 
 
 export class Game {
-    width = 1024;
-    height = 768;
-    inputs = new Inputs();
-    renderer: Renderer;
-    camera: Camera;
-    container: HTMLElement;
-    running = true;
+    private width = 1024;
+    private height = 768;
+    private inputs = new Inputs();
+    private renderer: Renderer;
+    private camera: Camera;
+    private container: HTMLElement;
+    private running = true;
 
-    brickMaker: BrickMaker;
-    player: Paddle;
-    ball: Ball;
+    private brickMaker: BrickMaker;
+    private player: Paddle;
+    private ball: Ball;
 
-    ballCount = 3;
+    private ballCount = 3;
 
-    deadZone: AABB;
+    private deadZone: AABB;
 
-    time = 0;
-    lastTime = Date.now();
+    private time = 0;
+    private lastTime = Date.now();
 
+    private listeners: Map<string, () => void> = new Map();
 
     constructor() {
         this.renderer = new Renderer(this.width, this.height);
@@ -49,6 +50,7 @@ export class Game {
 
         this.player = this.createPlayer();
         this.ball = this.createBall();
+        this.running = false;
 
         const brickCols = 8;
         const brickRows = 4;
@@ -70,16 +72,37 @@ export class Game {
                 this.brickMaker.createBrick(x, y, brickWidth, brickHeight);
             }
         }
+        this.renderStep();
     }
 
-    run() {
+    public addEventListener(subject: string, callback: () => void) {
+        this.listeners.set(subject, callback);
+    }
+
+    public emit(evt: string) {
+        const found = this.listeners.get(evt);
+        if (found) found();
+    }
+
+    public start() {
+        this.running = true;
+        this.emit('start');
+        this.run();
+    }
+
+    public pause() {
+        this.emit('pause');
+        this.running = false;
+    }
+
+    public run() {
         if (this.running) {
             this.step();
             requestAnimationFrame(this.run.bind(this));
         }
     }
 
-    step() {
+    public step() {
         const curTime = Date.now();
         const dt = (curTime - this.lastTime);
         this.time += dt / 1000;
@@ -97,12 +120,12 @@ export class Game {
         this.renderStep();
 
         if (this.brickMaker.brickCount() === 0) {
-            console.log('YOU WON!!!');
+            this.emit('win');
             this.running = false;
         }
 
         if (this.ballCount === 0) {
-            console.log('You lost!!!');
+            this.emit('lose');
             this.running = false;
         }
     }

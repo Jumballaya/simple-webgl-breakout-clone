@@ -14,3 +14,23 @@ body {
 canvas {
     border: 1px solid #333;
 }
+
+.overlay {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255,255,255, 0.5);
+    font-size: 42px;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.overlay[hidden] {
+    display: none;
+}
