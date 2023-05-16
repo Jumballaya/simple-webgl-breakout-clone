@@ -20,6 +20,7 @@ export class Quad {
         gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
         gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
         gl.enableVertexAttribArray(0);
+        gl.enableVertexAttribArray(1);
         this.buffer = buffer;
     }
 

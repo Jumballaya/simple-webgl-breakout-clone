@@ -26,6 +26,7 @@ export class Game {
     renderer: Renderer;
     camera: Camera;
     container: HTMLElement;
+    running = true;
 
     brickMaker: BrickMaker;
     player: Paddle;
@@ -34,6 +35,10 @@ export class Game {
     ballCount = 3;
 
     deadZone: AABB;
+
+    time = 0;
+    lastTime = Date.now();
+
 
     constructor() {
         this.renderer = new Renderer(this.width, this.height);
@@ -67,8 +72,6 @@ export class Game {
         }
     }
 
-    running = true;
-
     run() {
         if (this.running) {
             this.step();
@@ -77,6 +80,12 @@ export class Game {
     }
 
     step() {
+        const curTime = Date.now();
+        const dt = (curTime - this.lastTime);
+        this.time += dt / 1000;
+        this.lastTime = curTime;
+        
+
         const player = this.player;
         const ball = this.ball;
         player.update(this.inputs, this.width);
@@ -88,12 +97,12 @@ export class Game {
         this.renderStep();
 
         if (this.brickMaker.brickCount() === 0) {
-            alert('YOU WON!!!');
+            console.log('YOU WON!!!');
             this.running = false;
         }
 
         if (this.ballCount === 0) {
-            alert('You lost!!!');
+            console.log('You lost!!!');
             this.running = false;
         }
     }
@@ -104,6 +113,7 @@ export class Game {
         const drawCalls = this.brickMaker.generateDrawCalls(
             this.renderer.context.TRIANGLES,
             this.renderer.projectionMatrix,
+            this.time,
         );
 
         for (const dc of drawCalls) {

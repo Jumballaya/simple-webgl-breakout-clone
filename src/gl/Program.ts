@@ -1,11 +1,14 @@
 import { Mat4, Vec4 } from "../math/types/math.types";
 
+type UniformType = 'mat4' | 'vec4' | 'float';
+type UniformValue = Mat4 | Vec4 | number;
+
 export class Program {
     private vertexShader: WebGLShader;
     private fragmentShader: WebGLShader;
     private program: WebGLProgram;
 
-    private uniforms: Map<string, { pointer: WebGLUniformLocation; type: 'mat4' | 'vec4'; data: Mat4 | Vec4; }> = new Map();
+    private uniforms: Map<string, { pointer: WebGLUniformLocation; type: UniformType; data: UniformValue; }> = new Map();
 
     constructor(
         private vertText: string,
@@ -21,41 +24,51 @@ export class Program {
         this.gl.useProgram(this.program);
     }
 
-    public createUniform(loc: string, type: 'vec4' | 'mat4', data: Mat4 | Vec4): void {
+    public createUniform(loc: string, type: UniformType, data: UniformValue): void {
         this.bind();
         const found = this.uniforms.get(loc);
         if (found) {
             found.data = data;
-            if (found.type === 'mat4') {
+            if (found.type === 'mat4' && data instanceof Array) {
                 this.gl.uniformMatrix4fv(found.pointer, false, new Float32Array(data));
             }
-            if (found.type === 'vec4') {
+            if (found.type === 'vec4' && data instanceof Array) {
                 this.gl.uniform4f(found.pointer, data[0], data[1], data[2], data[3]);
+            }
+            if (type === 'float' && typeof data === 'number') {
+                this.gl.uniform1f(found.pointer, data);
             }
             return;
         }
         const pointer = this.gl.getUniformLocation(this.program, loc);
         if (!pointer) throw new Error(`Could not get uniform location for "${loc}"`);
-        if (type === 'mat4') {
+        if (type === 'mat4' && data instanceof Array) {
             this.uniforms.set(loc, { pointer, type, data });
             this.gl.uniformMatrix4fv(pointer, false, new Float32Array(data));
         }
-        if (type === 'vec4') {
+        if (type === 'vec4' && data instanceof Array) {
             this.uniforms.set(loc, { pointer, type, data });
             this.gl.uniform4f(pointer, data[0], data[1], data[2], data[3]);
         }
+        if (type === 'float' && typeof data === 'number') {
+            this.uniforms.set(loc, { pointer, type, data });
+            this.gl.uniform1f(pointer, data);
+        }
     }
 
-    public updateUniform(loc: string, type: 'mat4' | 'vec4', data: Mat4 | Vec4): void {
+    public updateUniform(loc: string, type: UniformType, data: UniformValue): void {
         this.bind();
         const found = this.uniforms.get(loc);
         if (!found) return this.createUniform(loc, type, data);
         found.data = data;
-        if (type === 'mat4') {
+        if (type === 'mat4' && data instanceof Array) {
             this.gl.uniformMatrix4fv(found.pointer, false, new Float32Array(data));
         }
-        if (type === 'vec4') {
+        if (type === 'vec4' && data instanceof Array) {
             this.gl.uniform4f(found.pointer, data[0], data[1], data[2], data[3]);
+        }
+        if (type === 'float' && typeof data === 'number') {
+            this.gl.uniform1f(found.pointer, data);
         }
     }
 
