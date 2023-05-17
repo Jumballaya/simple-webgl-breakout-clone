@@ -14,7 +14,6 @@ import { Quad } from '../core/Quad';
 import { Inputs } from './Inputs';
 import { Ball } from './entities/Ball';
 import { m4 } from './../math/m4';
-import { Camera } from '../core/Camera';
 import { AABB } from './types/aabb.type';
 import { BrickMaker } from './BrickMaker';
 
@@ -166,7 +165,6 @@ export class Game {
         const drawCalls = this.brickMaker.generateDrawCalls(
             this.renderer.context.TRIANGLES,
             this.renderer.projectionMatrix,
-            this.time,
         );
 
         for (const dc of drawCalls) {
