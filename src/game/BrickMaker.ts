@@ -49,7 +49,6 @@ export class BrickMaker {
     public generateDrawCalls(
         type: DrawType,
         projectionMatrx: Mat4,
-        time: number,
     ): Array<DrawCall> {
         const calls: Array<DrawCall> = [];
         for (let i = 0; i < this.bricks.length; i++) {

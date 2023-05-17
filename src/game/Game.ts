@@ -24,7 +24,7 @@ export class Game {
     private height;
     private inputs = new Inputs();
     private renderer: Renderer;
-    private camera: Camera;
+    // private camera: Camera;
     private container: HTMLElement;
     private running = true;
 
@@ -64,7 +64,7 @@ export class Game {
         this.width = containerRect.width;
         this.height = containerRect.height;
         this.renderer = new Renderer(this.width, this.height);
-        this.camera = new Camera();
+        // this.camera = new Camera();
         this.renderer.attachTo(this.container);
 
         this.player = this.createPlayer();
