@@ -35,8 +35,8 @@ export class Game {
 
     private deadZone: AABB;
 
-    private time = 0;
-    private lastTime = Date.now();
+    // private time = 0;
+    // private lastTime = Date.now();
 
     private listeners: Map<string, () => void> = new Map();
 
@@ -129,10 +129,10 @@ export class Game {
     }
 
     public step() {
-        const curTime = Date.now();
-        const dt = (curTime - this.lastTime);
-        this.time += dt / 1000;
-        this.lastTime = curTime;
+        // const curTime = Date.now();
+        // const dt = (curTime - this.lastTime);
+        // this.time += dt / 1000;
+        // this.lastTime = curTime;
         
 
         const player = this.player;
