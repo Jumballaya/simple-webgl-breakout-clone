@@ -1,19 +1,39 @@
+* {
+    box-sizing: border-box;
+}
+
 html, body {
     margin: 0;
+    font-family: sans-serif;
 }
 
 body {
     display: flex;
-    align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
-    background-color: #666666;
+    background-color: #1e1e1e;
+}
+
+.container {
+    display: block;
+    min-width: 440px;
 }
 
 canvas {
     border: 1px solid #333;
+    width: 100%;
 }
+
+.game-container {
+    max-height: 768px;
+    min-height: 320px;
+    max-width: 1024px;
+    min-width: 240px;
+    width: 100%;
+    height: 100%;
+}
+
 
 .overlay {
     position: absolute;
@@ -27,10 +47,22 @@ canvas {
     background: rgba(255,255,255, 0.5);
     font-size: 42px;
     font-weight: bold;
-    font-family: sans-serif;
     text-align: center;
 }
 
 .overlay[hidden] {
     display: none;
+}
+
+.overlay div {
+    padding: 24px;
+    background-color: white;
+}
+
+.ui-container {
+    display: flex;
+    flex-direction: row;
+    color: white;
+    padding: 0 24px;
+    justify-content: space-between;
 }

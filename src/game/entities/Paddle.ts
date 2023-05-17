@@ -3,7 +3,7 @@ import { Inputs } from "../Inputs";
 import { Entity } from "./Entity";
 
 export class Paddle extends Entity {
-    position: Vec3 = [64, 768 - 64, 1];
+    position: Vec3 = [0, 0, 1];
     size: Vec3 = [120, 16, 1];
     velocity: [number, number] = [10, 10];
 

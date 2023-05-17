@@ -20,8 +20,8 @@ import { BrickMaker } from './BrickMaker';
 
 
 export class Game {
-    private width = 1024;
-    private height = 768;
+    private width;;
+    private height;
     private inputs = new Inputs();
     private renderer: Renderer;
     private camera: Camera;
@@ -41,11 +41,30 @@ export class Game {
 
     private listeners: Map<string, () => void> = new Map();
 
+
+    private $score: HTMLElement;
+    private $balls: HTMLElement;
+
     constructor() {
+        this.container = document.createElement('div');
+        this.container.classList.add('game-container');
+
+        this.$score = document.createElement('div');
+        this.$score.innerHTML = '<h1>Score: 0</h1>';
+        this.$balls = document.createElement('div');
+        this.$balls.innerHTML = '<h1>Balls: 3</h1>';
+        const uiContainer = document.createElement('div');
+        uiContainer.classList.add('ui-container');
+        uiContainer.appendChild(this.$score);
+        uiContainer.appendChild(this.$balls);
+        this.container.appendChild(uiContainer);
+
+        document.body.appendChild(this.container);
+        const containerRect = this.container.getBoundingClientRect();
+        this.width = containerRect.width;
+        this.height = containerRect.height;
         this.renderer = new Renderer(this.width, this.height);
         this.camera = new Camera();
-        this.container = document.createElement('div');
-        document.body.appendChild(this.container);
         this.renderer.attachTo(this.container);
 
         this.player = this.createPlayer();
@@ -72,6 +91,14 @@ export class Game {
                 this.brickMaker.createBrick(x, y, brickWidth, brickHeight);
             }
         }
+
+        window.addEventListener('resize', () => {
+            const containerRect = this.container.getBoundingClientRect();
+            this.width = containerRect.width;
+            this.height = containerRect.height;
+            this.renderer.resize(this.width, this.height);
+        });
+
         this.renderStep();
     }
 
@@ -118,6 +145,9 @@ export class Game {
         this.handleBallDeadZoneCollision();
 
         this.renderStep();
+
+        this.$score.innerHTML = `<h1>Hits Left: ${this.brickMaker.hitsLeft()}</h1>`;
+        this.$balls.innerHTML = `<h1>Balls: ${this.ballCount}</h1>`;
 
         if (this.brickMaker.brickCount() === 0) {
             this.emit('win');
@@ -193,6 +223,7 @@ export class Game {
         const ball = this.ball;
         if (this.collided(ball.getBoundingBox(), this.deadZone)) {
             this.ballCount--;
+            this.emit('lost-ball');
             this.ball.position[0] = this.width / 2;
             this.ball.position[1] = this.height / 2;
         }
@@ -203,7 +234,9 @@ export class Game {
         const quad = new Quad(gl);
         const program = new Program(playerVertexText, playerFragmentText, gl);
         const player = new Paddle(program, quad);
+        console.log(this.height);
         player.position[0] = this.width / 2;
+        player.position[1] = (this.height * 0.9) - player.size[1];
         return player;
     }
     

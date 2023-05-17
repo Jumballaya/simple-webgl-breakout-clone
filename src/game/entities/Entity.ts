@@ -5,11 +5,11 @@ import { Mat4, Vec3 } from "../../math/types/math.types";
 import { AABB } from "../types/aabb.type";
 
 export class Entity {
-    position: Vec3 = [64, 768 - 64, 1];
+    position: Vec3 = [0, 0, 1];
     size: Vec3 = [93, 16, 1];
 
     constructor(public program: Program, public quad: Quad) {
-        program.createUniform('u_transform', this.modelMatrix);
+        program.createUniform('u_transform', 'mat4', this.modelMatrix);
     }
     
     get modelMatrix(): Mat4 {

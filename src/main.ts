@@ -5,16 +5,22 @@ const game = new Game();
 game.run();
 
 const messageState = {
-    start: `Press Enter to Start\n'A' and 'D' to Move\nEscape to Pause`,
-    running: 'Press Enter to Resume',
-    won: 'You Won!',
-    lost: 'You Lost!',
+    start: `<div>
+        Press Enter to Start<br/>
+        <span style="color: #e11e1f;">'A'</span>
+        and <span style="color: #e11e1f;">'D'</span>
+        to Move<br />Escape to Pause
+    </div>`,
+    running: '<div>Press Enter to Resume</div>',
+    nextBall: '<div>You got it this Time!<br />Press <span style="color: #e11e1f;">Enter</span> to try again</div>',
+    won: '<div>You Won!</div>',
+    lost: '<div>You Lost!</div>',
 };
 
 let running = true;
 const showOverlay = (state: keyof typeof messageState) => {
     $overlay.hidden = false;
-    $overlay.innerText = messageState[state] || '';
+    $overlay.innerHTML = messageState[state] || '';
 }
 
 game.addEventListener('lose', () => {
@@ -33,6 +39,11 @@ game.addEventListener('pause', () => {
 
 game.addEventListener('start', () => {
     $overlay.hidden = true;
+});
+
+game.addEventListener('lost-ball', () => {
+    game.pause();
+    showOverlay('nextBall');
 });
 
 const $overlay = document.createElement('div');

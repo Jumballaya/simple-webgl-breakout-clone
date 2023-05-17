@@ -20,6 +20,13 @@ export class Renderer {
         this.gl = gl;
     }
 
+    public resize(w: number, h: number) {
+        this.screenSize.width = w;
+        this.screenSize.height = h;
+        this.canvas.width = this.screenSize.width;
+        this.canvas.height = this.screenSize.height;
+    }
+
     get context() {
         return this.gl;
     }

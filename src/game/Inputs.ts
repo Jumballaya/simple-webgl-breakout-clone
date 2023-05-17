@@ -4,14 +4,14 @@ export class Inputs {
 
     constructor() {
         document.addEventListener('keydown', (e) => {
-            this.keys.add(e.key);
+            this.keys.add(e.key.toLowerCase());
         });
         document.addEventListener('keyup', (e) => {
-            this.keys.delete(e.key);
+            this.keys.delete(e.key.toLowerCase());
         });
     }
 
     public isPressed(keys: string[]): boolean {
-        return keys.every(k => this.keys.has(k));
+        return keys.every(k => this.keys.has(k.toLowerCase()));
     };
 }

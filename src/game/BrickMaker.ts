@@ -34,8 +34,16 @@ export class BrickMaker {
         this.bricks.push(brick);
     }
 
-    public brickCount() {
+    public brickCount(): number {
         return this.bricks.length;
+    }
+
+    public hitsLeft(): number {
+        let sum = 0;
+        for (let i = 0; i < this.bricks.length; i++) {
+            sum += this.bricks[i].lifeLevel;
+        }
+        return sum;
     }
 
     public generateDrawCalls(
